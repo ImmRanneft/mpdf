@@ -4,9 +4,12 @@ namespace Mpdf;
 
 use Mpdf\Css\TextVars;
 use Mpdf\Fonts\FontCache;
+
 use Mpdf\Shaper\Indic;
 use Mpdf\Shaper\Myanmar;
 use Mpdf\Shaper\Sea;
+
+use Mpdf\Utils\UtfString;
 
 class Otl
 {
@@ -1181,7 +1184,7 @@ class Otl
 				}
 				$newchar_data[$ectr] = ['bidi_class' => $this->schOTLdata[$sch][$i]['bidi_type'], 'uni' => $this->schOTLdata[$sch][$i]['uni']];
 				$newgroup .= $this->schOTLdata[$sch][$i]['group'];
-				$e.=code2utf($this->schOTLdata[$sch][$i]['uni']);
+				$e.= UtfString::code2utf($this->schOTLdata[$sch][$i]['uni']);
 				if (isset($this->mpdf->CurrentFont['subset'])) {
 					$this->mpdf->CurrentFont['subset'][$this->schOTLdata[$sch][$i]['uni']] = $this->schOTLdata[$sch][$i]['uni'];
 				}
@@ -1191,7 +1194,6 @@ class Otl
 		$this->OTLdata['GPOSinfo'] = $newGPOSinfo;
 		$this->OTLdata['char_data'] = $newchar_data;
 		$this->OTLdata['group'] = $newgroup;
-
 
 		// This leaves OTLdata::GPOSinfo, ::bidi_type, & ::group
 
@@ -2903,10 +2905,10 @@ class Otl
 			// not in $this->arabLeftJoining i.e. not a char which can join to the next one
 			if (isset($chars[$n]) && isset($this->arabLeftJoining[hexdec($chars[$n])])) {
 				// if in the middle of Syriac words
-				if (isset($chars[$i + 1]) && preg_match('/[\x{0700}-\x{0745}]/u', code2utf(hexdec($chars[$n]))) && preg_match('/[\x{0700}-\x{0745}]/u', code2utf(hexdec($chars[$i + 1]))) && isset($this->arabGlyphs[$char][4])) {
+				if (isset($chars[$i + 1]) && preg_match('/[\x{0700}-\x{0745}]/u', UtfString::code2utf(hexdec($chars[$n]))) && preg_match('/[\x{0700}-\x{0745}]/u', UtfString::code2utf(hexdec($chars[$i + 1]))) && isset($this->arabGlyphs[$char][4])) {
 					$retk = 4;
 				} // if at the end of Syriac words
-				elseif (!isset($chars[$i + 1]) || !preg_match('/[\x{0700}-\x{0745}]/u', code2utf(hexdec($chars[$i + 1])))) {
+				elseif (!isset($chars[$i + 1]) || !preg_match('/[\x{0700}-\x{0745}]/u', UtfString::code2utf(hexdec($chars[$i + 1])))) {
 					// if preceding base character IS (00715|00716|0072A)
 					if (strpos('0715|0716|072A', $chars[$n]) !== false && isset($this->arabGlyphs[$char][6])) {
 						$retk = 6;
@@ -5377,9 +5379,14 @@ class Otl
 									$nc2++;
 									$i2 = 0;
 								}
-								if ($para[$nc2][18]['char_data'][$i2]['diid'] != $ir) {
+
+								if (!isset($para[$nc2][18]['char_data'][$i2]['diid']) || $para[$nc2][18]['char_data'][$i2]['diid'] != $ir) {
 									continue;
 								}
+								if (!isset($para[$nc2][18]['char_data'][$i2]['type'])) {
+									continue;
+								}
+
 								$nexttype = $para[$nc2][18]['char_data'][$i2]['type'];
 								if (isset($para[$nc2][18]['char_data'][$i2]['sor'])) {
 									break;
@@ -5664,7 +5671,7 @@ class Otl
 				$cOTLdata[$nc]['group'] = '';
 			}
 			if ($carac['uni'] != 0xFFFC) {   // Object replacement character (65532)
-				$content[$nc] .= code2utf($carac['uni']);
+				$content[$nc] .= UtfString::code2utf($carac['uni']);
 				$cOTLdata[$nc]['group'] .= $carac['group'];
 				if (!empty($carac['GPOSinfo'])) {
 					if (isset($carac['GPOSinfo'])) {
