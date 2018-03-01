@@ -19876,6 +19876,17 @@ class Mpdf implements \Psr\Log\LoggerAwareInterface
 						}
 						break;
 				}//end of switch($k)
+                // in case we have at least one border all others should be set as well
+                // look into shrinkTable method where T->w, B->w, L->w and R->w are mandatory required
+                if($this->spanborder) {
+                    $defaultSpandorddet = [
+                        'T' => ['s' => 0, 'style' => '', 'w' => 0],
+                        'B' => ['s' => 0, 'style' => '', 'w' => 0],
+                        'L' => ['s' => 0, 'style' => '', 'w' => 0],
+                        'R' => ['s' => 0, 'style' => '', 'w' => 0],
+                    ];
+                    $this->spanborddet = array_merge($defaultSpandorddet, $this->spanborddet);
+                }
 			}
 
 			if ($type != 'TABLECELL') {
