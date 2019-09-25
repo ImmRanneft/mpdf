@@ -588,7 +588,14 @@ class CssManager
 					} else {
 						$newprop['FONT-STYLE'] = 'normal';
 					}
-					if (preg_match('/bold/i', $s)) {
+					if (preg_match('/\d+/', $s)) {
+					    if ((int) $s < 500) {
+                            $newprop['FONT-WEIGHT'] = 'normal';
+                        } else {
+                            $newprop['FONT-WEIGHT'] = 'bold';
+                        }
+                    }
+					elseif (preg_match('/bold/i', $s)) {
 						$newprop['FONT-WEIGHT'] = 'bold';
 					} else {
 						$newprop['FONT-WEIGHT'] = 'normal';
