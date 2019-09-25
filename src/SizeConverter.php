@@ -50,10 +50,10 @@ class SizeConverter implements \Psr\Log\LoggerAwareInterface
 	public function convert($size = 5, $maxsize = 0, $fontsize = false, $usefontsize = true)
 	{
 		$size = trim(strtolower($size));
-		// Match to:
+        // Match to:
         // - 99px
-        // - calc(9%)
-        // - calc(100% - 1px) catches first value(100%) and ignore things after it
+        // - calc(9%) catches 9%
+        // - calc(100% - 1px) catches first value(100%) and ignore things after it.
         $res = preg_match('/(?(?<=\()|^)(?P<size>[-0-9.,]+)?(?<=[-0-9.,])(?P<unit>[%a-z-]+)?/', $size, $parts);
 		if (!$res) {
 			// ignore definition
