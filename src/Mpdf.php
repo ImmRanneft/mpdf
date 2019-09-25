@@ -18410,14 +18410,23 @@ class Mpdf implements \Psr\Log\LoggerAwareInterface
 					break;
 
 				case 'FONT-WEIGHT': // normal bold // Does not support: bolder, lighter, 100..900(step value=100)
-					switch (strtoupper($v)) {
-						case 'BOLD':
-							$this->SetStyle('B', true);
-							break;
-						case 'NORMAL':
-							$this->SetStyle('B', false);
-							break;
-					}
+                    switch (strtoupper($v)) {
+                        case 100:
+                        case 200:
+                        case 300:
+                        case 400:
+                        case 'NORMAL':
+                            $this->SetStyle('B', false);
+                            break;
+                        case 500:
+                        case 600:
+                        case 700:
+                        case 800:
+                        case 900:
+                        case 'BOLD':
+                            $this->SetStyle('B', true);
+                            break;
+                    }
 					break;
 
 				case 'FONT-KERNING':
