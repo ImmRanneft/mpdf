@@ -34,7 +34,7 @@ class SizeConverter
         // - 99px
         // - calc(9%)
         // - calc(100% - 1px) catches first value(100%) and ignore things after it
-        $res = preg_match('/(?(?<=\()|^)(?P<size>[-0-9.,]+)?(?<=[-0-9.,])(?P<unit>[%a-z-]+)?/', $size, $parts);
+        $res = preg_match('/(?(?<=\()|^)(?P<size>[-0-9.,]+)?(?<=[-0-9.,])?(?P<unit>[%a-z-]+)?/', $size, $parts);
 		if (!$res) {
 			throw new \Mpdf\MpdfException(sprintf('Invalid size representation "%s"', $size));
 		}
